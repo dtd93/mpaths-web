@@ -40,8 +40,10 @@ func (c *DashboardController) Get() {
 	//for _, c := range clusters {
 	//fmt.Println(c.Centroid, "-->", c.Pts)
 	//}
+	var routes models.Routes
 
 	c.Data["data"] = pts
+	c.Data["routes"] = routes
 	c.Data["clusters"] = clusters
 	c.Data["cradius"] = radius
 	c.TplName = "dashboard.tpl"

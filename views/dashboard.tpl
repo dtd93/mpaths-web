@@ -23,6 +23,7 @@
       var marker;
       var longg = 2.425390;
       var latt =  41.543664;
+      var routes = [];
       var colors = ["Saab", "Volvo", "BMW"];
       function initMap() {
         //41.541183, 2.436676
@@ -61,7 +62,33 @@
             });
         {{ end }}
 
+        {{ range .routes }}
+            var points = {{.Path}};
+            var route = [];
+            console.log(points);
+            var pair = false;
+            var pre;
+            points.forEach(function (item) {
+                if (pair) {
+                    pair = false;
+                    continue;
+                }
+                pair = true;
+                pre = item;
+                route = route.concat(newRoute({lat: pre.lat, lng: pre.lng},{lat: item.lat, lng: item.lng}));
+            })
+            routes.push(route);
+
+        {{ end }}
+
+        routes.forEach(function (routeBus) {
+            routeBus.forEach(function (punts) {
+                routeBus
+            }) 
+        })
+
         newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000})
+        //newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000})
     //{{ range .data }}
 
 
@@ -123,16 +150,20 @@
       }
 
       function newRoute(start,end) {
-
+           var ll = []
         //url = "https://graphhopper.com/api/1/route?point=49.932707,11.588051&point=50.3404,11.64705&vehicle=car&debug=true&key=1e6fe44a-a261-4d55-9406-384d1e0eab2a&type=json&points_encoded=false"
         url = "https://graphhopper.com/api/1/route?point="+start.lat+","+start.lng+"&point="+end.lat+","+end.lng+"&vehicle=car&debug=true&key=1e6fe44a-a261-4d55-9406-384d1e0eab2a&type=json&points_encoded=false"
         $.get( url, function( data ) {
-          rt = JSON.parse(data.message);
-          var ll = []
-          for (var i = 0; i < rt.paths[0].points.coordinates.length; ++i) {
-            ll.push({"lat":  rt.paths.points.coordinates[i][0], "lng": rt.paths.points.coordinates[i][1]})
-          }
+          //console.log(data);
+          //rt = JSON.parse(data.message);
+          rt = data;
+        //   console.log(rt);
+         
 
+          for (var i = 0; i < rt.paths[0].points.coordinates.length; ++i) {
+            ll.push({"lat":  rt.paths[0].points.coordinates[i][1], "lng": rt.paths[0].points.coordinates[i][0]})
+          }
+          console.log(ll);
           if (line) line.setMap(null);
           line = new google.maps.Polyline({
              path: ll,
@@ -145,6 +176,7 @@
            line.setMap(map);
         });
         console.log("new route");
+        return ll;
       }
 
 
