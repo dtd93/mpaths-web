@@ -40,11 +40,15 @@ func (c *DashboardController) Get() {
 	//for _, c := range clusters {
 	//fmt.Println(c.Centroid, "-->", c.Pts)
 	//}
-	// var routes models.Routes
+	var routes models.Routes
 	// routes
-
-	c.Data["data"] = pts
-	c.Data["routes"] = algorithm.GetRoutes(pts)
+	//routes, clusters := algorithm.GetRoutesAndClusters(pts)
+	// for _, r := range routes {
+	// 	fmt.Println("Route", r)
+	// }
+	c.Data["clients"] = pts
+	//modelincorrecte
+	c.Data["routes"] = routes
 	c.Data["clusters"] = clusters
 	c.Data["cradius"] = radius
 	c.TplName = "dashboard.tpl"
