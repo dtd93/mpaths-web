@@ -62,32 +62,41 @@
             });
         {{ end }}
 
-        {{ range .routes }}
-            var points = {{.Path}};
-            var route = [];
-            console.log(points);
-            var pair = false;
-            var pre;
-            points.forEach(function (item) {
-                if (pair) {
-                    pair = false;
-                    continue;
-                }
-                pair = true;
-                pre = item;
-                route = route.concat(newRoute({lat: pre.lat, lng: pre.lng},{lat: item.lat, lng: item.lng}));
-            })
-            routes.push(route);
+        // {{ range .routes }}
+        //     var points = {{.}};
+        //     var route = [];
+        //     console.log(points);
+        //     var first = true;
+        //     var pre;
+        //     points.forEach(function (item) {
+        //         if (first) {
+        //             first = false;
+        //             pre = item;
+        //             continue;
+        //         }
+        //         route = route.concat(newRoute({lat: pre.Lat, lng: pre.Lng},{lat: item.Lat, lng: item.Lng}));
+        //         pre = item;
 
-        {{ end }}
+        //     })
+        //     routes.push(route);
 
-        routes.forEach(function (routeBus) {
-            routeBus.forEach(function (punts) {
-                routeBus
-            }) 
-        })
+        // {{ end }}
 
-        newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000})
+        // routes.forEach(function (routeBus) {
+        //     first = true;
+        //     pre = null;
+        //     routeBus.forEach(function (punt) {
+        //         if (first) {
+        //             first = false;
+        //             pre = item;
+        //             continue;
+        //         }
+        //         console.log(punt.lat)
+        //         console.log(punt.lng)
+        //     }) 
+        // })
+
+        // newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000})
         //newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000})
     //{{ range .data }}
 
