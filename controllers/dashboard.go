@@ -36,18 +36,16 @@ func (c *DashboardController) Get() {
 		malg.Point{41.538419, 2.451129},
 	}, 100)
 
-	clusters := algorithm.KmeansMaxDist(pts, radius)
+	//clusters := algorithm.KmeansMaxDist(pts, radius)
 	//for _, c := range clusters {
 	//fmt.Println(c.Centroid, "-->", c.Pts)
 	//}
-	var routes models.Routes
-	// routes
-	//routes, clusters := algorithm.GetRoutesAndClusters(pts)
-	// for _, r := range routes {
-	// 	fmt.Println("Route", r)
-	// }
+	//var routes models.Routes
+
+	routes, clusters := algorithm.GetRoutesAndClusters(pts)
+
+	c.Data["data"] = pts
 	c.Data["clients"] = pts
-	//modelincorrecte
 	c.Data["routes"] = routes
 	c.Data["clusters"] = clusters
 	c.Data["cradius"] = radius
