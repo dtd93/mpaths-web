@@ -28,6 +28,7 @@
       var routes = [];
       var busos = []
       var busObjective = [];
+      var busIterations = [];
       
       function initMap() {
         //41.541183, 2.436676
@@ -116,26 +117,6 @@
         
 
         //generacio de busos segons numero de ruta
-        
-        //bucle moure tots els bus, fer la crida asincrona per moure els diferents busos
-        routes.forEach(function (routeBus) {
-            var cityCircle = new google.maps.Circle({
-                strokeColor: '#FF0000',
-                strokeOpacity: 0.0,
-                strokeWeight: 2,
-                fillColor: '#00FF00',
-                fillOpacity: 1.0,
-                map: map,
-                center: {lat: tecnoLatt, lng: tecnoLongg},
-                radius: 10
-            });
-
-
-            busos.push(cityCircle);
-            busObjective.push(1)
-            //busMovement(cityCircle,routeBus);
-
-        })
         newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000}, function(){})
 
         
@@ -146,21 +127,59 @@
       }
 
       function moveBuses() {
+          if (busos.length == 0) {
+              //bucle moure tots els bus, fer la crida asincrona per moure els diferents busos
+                routes.forEach(function (routeBus) {
+                    var cityCircle = new google.maps.Circle({
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 0.0,
+                        strokeWeight: 2,
+                        fillColor: '#00FF00',
+                        fillOpacity: 1.0,
+                        map: map,
+                        center: {lat: routeBus[0].lat, lng: routeBus[0].lng},
+                        radius: 10
+                    });
+
+
+                    busos.push(cityCircle);
+                    busObjective.push(1);
+                    busIterations.push(0);
+                    //busMovement(cityCircle,routeBus);
+
+                })
+
+                return;
+          }
+          
+
           busos.forEach(function(bus,i){
               var objective = busObjective[i];
               var posActual = bus.getCenter();
               var busRoute = routes[i]
               var punt = busRoute[objective] 
               var pre = busRoute[objective-1]
-              console.log(punt);
-              console.log(pre);
-              console.log(routes);
-              var a = punt.Lat - pre.Lat;
-              var b = punt.Lng - pre.Lng;
+            //   console.log(punt);
+            //   console.log(pre);
+              var a = punt.lat - pre.lat;
+              var b = punt.lng - pre.lng;
               var c = Math.sqrt( a*a + b*b );
-              var iterations = c/0.00030;
+              var iterations = Math.floor(c/0.00030)+1;
+              console.log("Iterations" + iterations);
               var incrementX = a/iterations;
               var incrementY = b/iterations;
+              console.log(posActual.lat())
+              console.log(posActual.lng())
+              busIterations[i]++;
+              if (busIterations[i] >= iterations) {
+                  busObjective[i]++;
+                  busObjective[i] %= busRoute.length;
+
+                  if (busObjective[i] == 0) {
+                      busObjective[i] = 1;
+                  }
+                  busIterations[i] = 0;
+              }
               var pos = new google.maps.LatLng(posActual.lat()+incrementX, posActual.lng()+incrementY)
               bus.setCenter(pos);
           })
@@ -242,7 +261,7 @@
          
 
           for (var i = 0; i < rt.paths[0].points.coordinates.length; ++i) {
-            ll.push({"Lat":  rt.paths[0].points.coordinates[i][1], "Lng": rt.paths[0].points.coordinates[i][0]})
+            ll.push({"lat":  rt.paths[0].points.coordinates[i][1], "lng": rt.paths[0].points.coordinates[i][0]})
           }
           console.log(ll);
         //   if (line) line.setMap(null);
