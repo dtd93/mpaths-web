@@ -25,7 +25,6 @@ var latestModification time.Time
 func init() {
 	latestModification = time.Now()
 	f, _ := os.Open("mataro.in")
-
 	r := csv.NewReader(f)
 
 	for {
