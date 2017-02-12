@@ -74,6 +74,8 @@ func (c *DashboardController) AddPoint() {
 	lat, _ := c.GetFloat("lat")
 	lng, _ := c.GetFloat("lng")
 
+	fmt.Println("Lat:", lat, "Lng:", lng)
+
 	pts = append(pts, malg.Point{lat, lng})
 	latestModification = time.Now()
 }

@@ -9,11 +9,7 @@
   </head>
   <body>
     <div style="width: 100%; height: 20px; background: #333; color: white; padding: 10px; line-height: 20px">
-      <span>mPaths demo dashboard</span>
-      <!--<div style="float: right; padding-right: 30px; margin-top: -3px">
-        <input type="text" name="km" style="padding: 5px;">
-        <a href="#" onclick="newRoute()" style="margin-top: -1px; background: #A2E07B; padding: 7px; color: white; text-decoration: none; border-radius: 3px; border-bottom: 1px solid #17AD11; font-size: 12px">New route</a>
-      </div>-->
+      <span>Vavava demo dashboard</span>
     </div>
     <div id="map"></div>
     <script type="text/javascript">
@@ -126,14 +122,14 @@
               //bucle moure tots els bus, fer la crida asincrona per moure els diferents busos
                 routes.forEach(function (routeBus) {
                     var cityCircle = new google.maps.Circle({
-                        strokeColor: '#FF0000',
-                        strokeOpacity: 0.0,
+                        strokeColor: '#000000',
+                        strokeOpacity: 1,
                         strokeWeight: 2,
                         fillColor: '#00FF00',
-                        fillOpacity: 1.0,
+                        fillOpacity: 0.5,
                         map: map,
                         center: {lat: routeBus[0].lat, lng: routeBus[0].lng},
-                        radius: 10,
+                        radius: 25,
                         zIndex: 99,
                     });
 
@@ -264,7 +260,10 @@
           new google.maps.Polyline({
              path: ll,
              geodesic: true,
-             strokeColor: '#FF0000',
+             strokeColor: randomColor({
+                luminosity: 'dark',
+                format: 'hex' // e.g. 'rgb(225,200,20)'
+            }),
              strokeOpacity: 1.0,
              strokeWeight: 2
            }).setMap(map);
