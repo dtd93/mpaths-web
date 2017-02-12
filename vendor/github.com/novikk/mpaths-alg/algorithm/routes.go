@@ -20,15 +20,27 @@ func GetRoutesAndClusters(pts models.Points) (models.Routes, models.Clusters) {
 	// call algorithm in java
 	// build stdin
 	var stdin bytes.Buffer
-	stdin.WriteString(strconv.Itoa(len(clusters)) + "\n")
+	var finalClusters models.Clusters
+	for i := range clusters {
+		latStr := strconv.FormatFloat(clusters[i].Centroid.Lat, 'f', -1, 64)
+		lngStr := strconv.FormatFloat(clusters[i].Centroid.Lng, 'f', -1, 64)
+
+		if latStr == "NaN" || lngStr == "NaN" || len(clusters[i].Pts) == 0 {
+			continue
+		}
+
+		finalClusters = append(finalClusters, clusters[i])
+		// sum += len(clusters[i].Pts)
+	}
+
+	stdin.WriteString(strconv.Itoa(len(finalClusters)) + "\n")
 
 	// sum := 0
 	for i := range clusters {
 		latStr := strconv.FormatFloat(clusters[i].Centroid.Lat, 'f', -1, 64)
 		lngStr := strconv.FormatFloat(clusters[i].Centroid.Lng, 'f', -1, 64)
 
-		fmt.Println(latStr == "NaN", lngStr == "NaN", len(clusters[i].Pts) == 0, clusters[i].Radius == 0)
-		if latStr == "NaN" || lngStr == "NaN" || len(clusters[i].Pts) == 0 || clusters[i].Radius == 0 {
+		if latStr == "NaN" || lngStr == "NaN" || len(clusters[i].Pts) == 0 {
 			continue
 		}
 
@@ -68,14 +80,16 @@ func GetRoutesAndClusters(pts models.Points) (models.Routes, models.Clusters) {
 	// for i := range reResultServices {
 	// 	fmt.Println(reResultServices[i])
 	// }
+
 	if len(reResultServices) > 0 {
 		for i := range reResultServices {
 			vId, _ := strconv.Atoi(reResultServices[i][1])
 			cId, _ := strconv.Atoi(reResultServices[i][2])
 
-			routes[vId-1] = append(routes[vId-1], clusters[cId].Centroid)
+			fmt.Println(cId, len(finalClusters))
+			routes[vId-1] = append(routes[vId-1], finalClusters[cId].Centroid)
 		}
 	}
 
-	return routes, clusters
+	return routes, finalClusters
 }

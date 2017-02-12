@@ -26,10 +26,14 @@
       var tecnoLongg = 2.434114;
       var tecnoLatt =  41.528356;
       var routes = [];
-      var busos = []
+      var clusters = {};
+      var clusteroids = {};
+      var clients = {};
+      var busos = [];
       var busObjective = [];
       var busIterations = [];
-      
+      var points = [];
+
       function initMap() {
         //41.541183, 2.436676
         console.log("1");
@@ -39,16 +43,18 @@
         });
 
         {{ range .clients }}
-            new google.maps.Circle({
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.0,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 1.0,
-            map: map,
-            center: {lat: {{.Lat}}, lng: {{.Lng}}},
-            radius: 10
+            var client = new google.maps.Circle({
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.0,
+              strokeWeight: 2,
+              fillColor: '#FF0000',
+              fillOpacity: 1.0,
+              map: map,
+              center: {lat: {{.Lat}}, lng: {{.Lng}}},
+              radius: 10
             });
+            var key = {{.Lat}}.toString()+{{.Lng}}.toString();
+            clients[key] = client;
         {{ end }}
 
         console.log("2");
@@ -60,22 +66,26 @@
             });
             if ({{.Centroid.Lng}} != null && {{.Centroid.Lat}} != null) {
                 console.log("ho");
-                new google.maps.Circle({
-                strokeColor: color,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: color,
-                fillOpacity: 0.1,
-                map: map,
-                center: {lat: {{.Centroid.Lat}}, lng: {{.Centroid.Lng}}},
-                radius: {{.Radius}}+10
+                var cluster = new google.maps.Circle({
+                  strokeColor: color,
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: color,
+                  fillOpacity: 0.1,
+                  map: map,
+                  center: {lat: {{.Centroid.Lat}}, lng: {{.Centroid.Lng}}},
+                  radius: {{.Radius}}+10
                 });
+                var key = {{.Centroid.Lat}}.toString()+{{.Centroid.Lng}}.toString();
+                clusters[key] = cluster;
+                clusteroids[key] = {{.}}
+
             }
         {{ end }}
 
         //bucle recorrer rutas Ivan
         {{ range .routes }}
-            var points = {{.}};
+            points.push({{.}});
             var route = [];
             //console.log(points);
             var first = true;
@@ -83,52 +93,28 @@
             routes.push([]);
             ci = routes.length-1;
 
-            points.unshift({Lat: tecnoLatt, Lng: tecnoLongg})
-            points.push({Lat: tecnoLatt, Lng: tecnoLongg})
+            points[points.length-1].unshift({Lat: tecnoLatt, Lng: tecnoLongg})
+            points[points.length-1].push({Lat: tecnoLatt, Lng: tecnoLongg})
 
-            points.forEach(function (item) {
-                if (first) {
-                    first = false;
-                    pre = item;
-                    return;
+            route = route.concat(newRoute(points[points.length-1], function(ci) {
+                return function(pts) {
+                    routes[ci] = routes[ci].concat(pts);
+                    //routes = [route]
                 }
-                route = route.concat(newRoute({lat: pre.Lat, lng: pre.Lng},{lat: item.Lat, lng: item.Lng}, function(ci) {
-                    return function(pts) {
-                        routes[ci] = routes[ci].concat(pts);
-                        //routes = [route]
-                    }
-                }(ci)));
-                pre = item;
-            })
+            }(ci)));
+
+            // points.forEach(function (item) {
+            //     if (first) {
+            //         first = false;
+            //         pre = item;
+            //         return;
+            //     }
+                
+            //     pre = item;
+            // })
         {{ end }}
-        
-//hardcoded route
-        // var routeHard = [{Lat: tecnoLatt, Lng: tecnoLongg}, {Lat:41.53889574433734,Lng:2.4503702798809215},{Lat:41.540763798885564,Lng:2.448372820238507},{Lat:41.54036816511354,Lng:2.4453377249312465},{Lat:41.541893500205845,Lng:2.442377004497972},{Lat:41.540683194773365,Lng:2.4417842736435946},{Lat:41.539056191826795, Lng:2.441336521697717}, {Lat: tecnoLatt, Lng: tecnoLongg}]
-        // var route = [];
-        // var first = true;
-        // var pre;
-        // routeHard.forEach(function (item) {
-        //     if (first) {
-        //         first = false;
-        //         pre = item;
-        //         return;
-        //     }
 
-        //     newRoute({lat: pre.Lat, lng: pre.Lng},{lat: item.Lat, lng: item.Lng}, function(pts) {
-        //         route = route.concat(pts);
-        //         routes = [route]
-        //     });
-            
-        //     pre = item;
-        //     console.log("inside loop route")
-        // })
 
-        
-
-        // //generacio de busos segons numero de ruta
-        // newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000}, function(){})
-
-        
 
         google.maps.event.addListener(map, 'click', function(event) {
            placeMarker(event.latLng);
@@ -161,13 +147,14 @@
 
                 return;
           }
-          
+
 
           busos.forEach(function(bus,i){
               var objective = busObjective[i];
               var posActual = bus.getCenter();
               var busRoute = routes[i]
-              var punt = busRoute[objective] 
+              var punt = busRoute[objective]
+              //recrrer cluster i fe un check per a cada un de si == centre
               var pre = busRoute[objective-1]
             //   console.log(punt);
             //   console.log(pre);
@@ -182,6 +169,27 @@
               console.log(posActual.lng())
               busIterations[i]++;
               if (busIterations[i] >= iterations) {
+                  var key = ""
+                  console.log(clusters)
+                  for (var j = 0; j < points[i].length; j++) {
+                    dist = Math.sqrt(Math.pow(points[i][j].Lat - posActual.lat(),2) + Math.pow(points[i][j].Lng - posActual.lng(),2))
+                    //console.log("Dist: " + dist)
+                    if (dist < 0.0005) {
+                        key = points[i][j].Lat.toString() + points[i][j].Lng.toString()
+                        console.log("Got key: " + key)
+                    }
+                  }
+                  if(clusters[key] != null){
+                    clusters[key].setMap(null);
+                    var clustPoints = clusteroids[key].Pts;
+                    clustPoints.forEach(function(clustPoint){
+                      var key2 = clustPoint.Lat.toString()+clustPoint.Lng.toString()
+                      if(clients[key2] != null) {
+                        clients[key2].setMap(null);
+                      }
+                    })
+                  }
+
                   busObjective[i]++;
                   busObjective[i] %= busRoute.length;
 
@@ -194,7 +202,7 @@
               bus.setCenter(pos);
           })
       }
-      setInterval(moveBuses,1000);
+      setInterval(moveBuses,300);
 
       function busMovement(bus, routeMovement){
             first = true;
@@ -222,53 +230,31 @@
                     }, 1000 + i*1000);
                 }
 
-            }) 
+            })
       }
 
       function placeMarker() {
-          // if (marker) marker.setMap(null);
-          // marker = new google.maps.Marker({
-          //     position: location,
-          //     map: map
-          // });
-          // console.log(location)
-          // url = '/route/new_with_end?tp=foot&km=0&fromLat=43.46278&fromLon=-3.80500&toLat=' +location.lat()+ "&toLon=" + location.lng()
-          // $.get( url, function( data ) {
-          //   rt = JSON.parse(data.message);
-          //   var ll = []
-          //   for (var i = 0; i < rt.length; ++i) {
-          //     ll.push({"lat": rt[i][0], "lng": rt[i][1]})
-          //   }
-
-          //   if (line) line.setMap(null);
-          //   line = new google.maps.Polyline({
-          //      path: ll,
-          //      geodesic: true,
-          //      strokeColor: '#FF0000',
-          //      strokeOpacity: 1.0,
-          //      strokeWeight: 2
-          //    });
-
-          //    line.setMap(map);
-          // });
-
-
-          console.log("new route");
+                  console.log("new route");
 
       }
 
-      function newRoute(start,end,cb) {
+      function newRoute(points,cb) {
         console.log("hello");
 
         var ll = []
+        pts = "";
+        for (i = 0; i < points.length; i++) {
+             pts = pts + "point=" + points[i].Lat + "," + points[i].Lng + "&"
+        }
+
         //url = "https://graphhopper.com/api/1/route?point=49.932707,11.588051&point=50.3404,11.64705&vehicle=car&debug=true&key=1e6fe44a-a261-4d55-9406-384d1e0eab2a&type=json&points_encoded=false"
-        url = "https://graphhopper.com/api/1/route?point="+start.lat+","+start.lng+"&point="+end.lat+","+end.lng+"&vehicle=car&debug=true&key=1e6fe44a-a261-4d55-9406-384d1e0eab2a&type=json&points_encoded=false"
+        url = "https://graphhopper.com/api/1/route?"+pts+"vehicle=car&debug=true&key=1e6fe44a-a261-4d55-9406-384d1e0eab2a&type=json&points_encoded=false"
         $.get( url, function( data ) {
-          //console.log(data);
+          console.log(data);
           //rt = JSON.parse(data.message);
           rt = data;
         //   console.log(rt);
-         
+
 
           for (var i = 0; i < rt.paths[0].points.coordinates.length; ++i) {
             ll.push({"lat":  rt.paths[0].points.coordinates[i][1], "lng": rt.paths[0].points.coordinates[i][0]})

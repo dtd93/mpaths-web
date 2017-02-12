@@ -69,16 +69,16 @@
 			"revisionTime": "2015-04-01T06:43:43Z"
 		},
 		{
-			"checksumSHA1": "eU7R0JYIX78u4319g6Kqeda517M=",
+			"checksumSHA1": "70qtemOydlr4tydIdfR6Fx+nd6c=",
 			"path": "github.com/novikk/mpaths-alg/algorithm",
-			"revision": "9b0e855813dfe1a165c6d1cdfa1a589c71018284",
-			"revisionTime": "2017-02-12T03:31:58Z"
+			"revision": "5f1df6c5b820ce8b5a1a03add0a4ba3b19bd847f",
+			"revisionTime": "2017-02-12T03:42:04Z"
 		},
 		{
 			"checksumSHA1": "AlhnX+V9rC8cguFY0IKjEyUyY8Q=",
 			"path": "github.com/novikk/mpaths-alg/models",
-			"revision": "9b0e855813dfe1a165c6d1cdfa1a589c71018284",
-			"revisionTime": "2017-02-12T03:31:58Z"
+			"revision": "5f1df6c5b820ce8b5a1a03add0a4ba3b19bd847f",
+			"revisionTime": "2017-02-12T03:42:04Z"
 		},
 		{
 			"checksumSHA1": "tCjlFnK4U+VQNYX3I8IXfv4Zp4w=",

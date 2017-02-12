@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/csv"
+	"fmt"
 	"io"
 	"log"
 	"math/rand"
@@ -44,7 +45,7 @@ func init() {
 }
 
 func (c *DashboardController) Get() {
-	rand.Seed(42)
+	rand.Seed(43)
 	radius := 300.0
 
 	// pts := algorithm.RandomPoints([2]malg.Point{
@@ -59,6 +60,7 @@ func (c *DashboardController) Get() {
 	//var routes models.Routes
 
 	routes, clusters := algorithm.GetRoutesAndClusters(pts)
+	fmt.Println(routes)
 
 	c.Data["data"] = pts
 	c.Data["clients"] = pts
