@@ -1,0 +1,115 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "wjMOkQePdr7qHD9RXHuKcSOcJZE=",
+			"path": "github.com/astaxie/beego",
+			"revision": "88c5dfa6ead42e624c2e7d9e04eab6cb2d07412a",
+			"revisionTime": "2016-03-23T09:05:40Z"
+		},
+		{
+			"checksumSHA1": "raJhf500jq7AzIGIclRQBo0B5+s=",
+			"path": "github.com/astaxie/beego/config",
+			"revision": "88c5dfa6ead42e624c2e7d9e04eab6cb2d07412a",
+			"revisionTime": "2016-03-23T09:05:40Z"
+		},
+		{
+			"checksumSHA1": "52Cnm/rmogm6vPa2jW9D6SuKm3g=",
+			"path": "github.com/astaxie/beego/context",
+			"revision": "88c5dfa6ead42e624c2e7d9e04eab6cb2d07412a",
+			"revisionTime": "2016-03-23T09:05:40Z"
+		},
+		{
+			"checksumSHA1": "PDNn16w89zWODshT9zlPzSmWZFA=",
+			"path": "github.com/astaxie/beego/grace",
+			"revision": "88c5dfa6ead42e624c2e7d9e04eab6cb2d07412a",
+			"revisionTime": "2016-03-23T09:05:40Z"
+		},
+		{
+			"checksumSHA1": "3NghofZJDSzBRd0rPYaNa0Kr+DE=",
+			"path": "github.com/astaxie/beego/logs",
+			"revision": "88c5dfa6ead42e624c2e7d9e04eab6cb2d07412a",
+			"revisionTime": "2016-03-23T09:05:40Z"
+		},
+		{
+			"checksumSHA1": "Zeh58fFq41Ym/YNH47O6gdm1Mh8=",
+			"path": "github.com/astaxie/beego/session",
+			"revision": "88c5dfa6ead42e624c2e7d9e04eab6cb2d07412a",
+			"revisionTime": "2016-03-23T09:05:40Z"
+		},
+		{
+			"checksumSHA1": "Mu2lA5Jq0tRk9MjhWllyzcJD6KU=",
+			"path": "github.com/astaxie/beego/toolbox",
+			"revision": "88c5dfa6ead42e624c2e7d9e04eab6cb2d07412a",
+			"revisionTime": "2016-03-23T09:05:40Z"
+		},
+		{
+			"checksumSHA1": "x90ZIgNp0dy/saCS+4tBR3gdQ6g=",
+			"path": "github.com/astaxie/beego/utils",
+			"revision": "88c5dfa6ead42e624c2e7d9e04eab6cb2d07412a",
+			"revisionTime": "2016-03-23T09:05:40Z"
+		},
+		{
+			"checksumSHA1": "ucpQEXTfkxWt9IbjCqd69FeZ9/g=",
+			"path": "github.com/jinzhu/gorm",
+			"revision": "bf413d67d3a25d4eeddb28541283fa6434d1cdb5",
+			"revisionTime": "2016-05-04T13:22:04Z"
+		},
+		{
+			"checksumSHA1": "9Fb+a7sS7os6y+72DjHAVegPBwY=",
+			"path": "github.com/jinzhu/inflection",
+			"revision": "3272df6c21d04180007eb3349844c89a3856bc25",
+			"revisionTime": "2015-10-09T08:41:29Z"
+		},
+		{
+			"checksumSHA1": "qt9AtSGLIyVzsUF6YhPkP6NDszc=",
+			"path": "github.com/jtolds/gls",
+			"revision": "9a4a02dbe491bef4bab3c24fd9f3087d6c4c6690",
+			"revisionTime": "2015-04-01T06:43:43Z"
+		},
+		{
+			"checksumSHA1": "2zxLIa4Z6WQMEbbfRte36J0RTzE=",
+			"path": "github.com/novikk/mpaths-alg/algorithm",
+			"revision": "7b8b47628ae71d673e138a73c5d3a865bd481d22",
+			"revisionTime": "2017-02-11T17:33:14Z"
+		},
+		{
+			"checksumSHA1": "AlhnX+V9rC8cguFY0IKjEyUyY8Q=",
+			"path": "github.com/novikk/mpaths-alg/models",
+			"revision": "7b8b47628ae71d673e138a73c5d3a865bd481d22",
+			"revisionTime": "2017-02-11T17:33:14Z"
+		},
+		{
+			"checksumSHA1": "tCjlFnK4U+VQNYX3I8IXfv4Zp4w=",
+			"path": "github.com/smartystreets/assertions",
+			"revision": "e20084b55acef0ee9b0aa38cad708f830b9537ad",
+			"revisionTime": "2015-09-14T15:36:18Z"
+		},
+		{
+			"checksumSHA1": "QCsUvPHx/Ifqm+sJmocjSvePAIc=",
+			"path": "github.com/smartystreets/assertions/internal/oglematchers",
+			"revision": "e20084b55acef0ee9b0aa38cad708f830b9537ad",
+			"revisionTime": "2015-09-14T15:36:18Z"
+		},
+		{
+			"checksumSHA1": "c018VoO2+ltGLjLOJufXiLkr6eI=",
+			"path": "github.com/smartystreets/goconvey/convey",
+			"revision": "a29728e4d70bb23e436d03bee49b1793e70a9352",
+			"revisionTime": "2015-09-14T15:32:58Z"
+		},
+		{
+			"checksumSHA1": "2mzJMHi1+GQkBR3WPqLCGmQHuww=",
+			"path": "github.com/smartystreets/goconvey/convey/gotest",
+			"revision": "a29728e4d70bb23e436d03bee49b1793e70a9352",
+			"revisionTime": "2015-09-14T15:32:58Z"
+		},
+		{
+			"checksumSHA1": "pSUzEzuwPw7/AFELKUaLPxY+noA=",
+			"path": "github.com/smartystreets/goconvey/convey/reporting",
+			"revision": "a29728e4d70bb23e436d03bee49b1793e70a9352",
+			"revisionTime": "2015-09-14T15:32:58Z"
+		}
+	],
+	"rootPath": "mpaths-web"
+}

@@ -46,7 +46,7 @@ func init() {
 }
 
 func (c *DashboardController) Get() {
-	radius := 200.0
+	radius := 300.0
 
 	// pts := algorithm.RandomPoints([2]malg.Point{
 	// 	malg.Point{41.542137, 2.426475},
