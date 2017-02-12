@@ -26,10 +26,13 @@
       var tecnoLongg = 2.434114;
       var tecnoLatt =  41.528356;
       var routes = [];
-      var busos = []
+      var cluster = {};
+      var clusteroids = {};
+      var clients = {};
+      var busos = [];
       var busObjective = [];
       var busIterations = [];
-      
+
       function initMap() {
         //41.541183, 2.436676
         console.log("1");
@@ -39,16 +42,18 @@
         });
 
         {{ range .clients }}
-            new google.maps.Circle({
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.0,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 1.0,
-            map: map,
-            center: {lat: {{.Lat}}, lng: {{.Lng}}},
-            radius: 10
+            var client = new google.maps.Circle({
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.0,
+              strokeWeight: 2,
+              fillColor: '#FF0000',
+              fillOpacity: 1.0,
+              map: map,
+              center: {lat: {{.Lat}}, lng: {{.Lng}}},
+              radius: 10
             });
+            var key = {{.Lat}}.toString()+{{.Lng}}.toString();
+            clients[key] = client;
         {{ end }}
 
         console.log("2");
@@ -60,16 +65,20 @@
             });
             if ({{.Centroid.Lng}} != null && {{.Centroid.Lat}} != null) {
                 console.log("ho");
-                new google.maps.Circle({
-                strokeColor: color,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: color,
-                fillOpacity: 0.1,
-                map: map,
-                center: {lat: {{.Centroid.Lat}}, lng: {{.Centroid.Lng}}},
-                radius: {{.Radius}}+10
+                var cluster = new google.maps.Circle({
+                  strokeColor: color,
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: color,
+                  fillOpacity: 0.1,
+                  map: map,
+                  center: {lat: {{.Centroid.Lat}}, lng: {{.Centroid.Lng}}},
+                  radius: {{.Radius}}+10
                 });
+                var key = {{.Centroid.Lat}}.toString()+{{.Centroid.Lng}}.toString();
+                clusters[key] = cluster;
+                clusteroids[key] = {{.}}
+
             }
         {{ end }}
 
@@ -101,34 +110,8 @@
                 pre = item;
             })
         {{ end }}
-        
-//hardcoded route
-        // var routeHard = [{Lat: tecnoLatt, Lng: tecnoLongg}, {Lat:41.53889574433734,Lng:2.4503702798809215},{Lat:41.540763798885564,Lng:2.448372820238507},{Lat:41.54036816511354,Lng:2.4453377249312465},{Lat:41.541893500205845,Lng:2.442377004497972},{Lat:41.540683194773365,Lng:2.4417842736435946},{Lat:41.539056191826795, Lng:2.441336521697717}, {Lat: tecnoLatt, Lng: tecnoLongg}]
-        // var route = [];
-        // var first = true;
-        // var pre;
-        // routeHard.forEach(function (item) {
-        //     if (first) {
-        //         first = false;
-        //         pre = item;
-        //         return;
-        //     }
 
-        //     newRoute({lat: pre.Lat, lng: pre.Lng},{lat: item.Lat, lng: item.Lng}, function(pts) {
-        //         route = route.concat(pts);
-        //         routes = [route]
-        //     });
-            
-        //     pre = item;
-        //     console.log("inside loop route")
-        // })
 
-        
-
-        // //generacio de busos segons numero de ruta
-        // newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000}, function(){})
-
-        
 
         google.maps.event.addListener(map, 'click', function(event) {
            placeMarker(event.latLng);
@@ -161,13 +144,14 @@
 
                 return;
           }
-          
+
 
           busos.forEach(function(bus,i){
               var objective = busObjective[i];
               var posActual = bus.getCenter();
               var busRoute = routes[i]
-              var punt = busRoute[objective] 
+              var punt = busRoute[objective]
+              //recrrer cluster i fe un check per a cada un de si == centre
               var pre = busRoute[objective-1]
             //   console.log(punt);
             //   console.log(pre);
@@ -182,6 +166,18 @@
               console.log(posActual.lng())
               busIterations[i]++;
               if (busIterations[i] >= iterations) {
+                  var key = punt.lat.toString()+punt.lng.toString()
+                  if(clusters[key] != null){
+                    clusters[key].setMap(null);
+                    var clustPoints = clusteroids[key].pts;
+                    clustPoints.forEach(function(clustPoint){
+                      var key2 = clustPoint.Lat.toStrin()+clustPoint.Lng.toStrin()
+                      if(clients[key2] != null) {
+                        clients[key2].setMap(null);
+                      }
+                    })
+                  }
+
                   busObjective[i]++;
                   busObjective[i] %= busRoute.length;
 
@@ -222,38 +218,11 @@
                     }, 1000 + i*1000);
                 }
 
-            }) 
+            })
       }
 
       function placeMarker() {
-          // if (marker) marker.setMap(null);
-          // marker = new google.maps.Marker({
-          //     position: location,
-          //     map: map
-          // });
-          // console.log(location)
-          // url = '/route/new_with_end?tp=foot&km=0&fromLat=43.46278&fromLon=-3.80500&toLat=' +location.lat()+ "&toLon=" + location.lng()
-          // $.get( url, function( data ) {
-          //   rt = JSON.parse(data.message);
-          //   var ll = []
-          //   for (var i = 0; i < rt.length; ++i) {
-          //     ll.push({"lat": rt[i][0], "lng": rt[i][1]})
-          //   }
-
-          //   if (line) line.setMap(null);
-          //   line = new google.maps.Polyline({
-          //      path: ll,
-          //      geodesic: true,
-          //      strokeColor: '#FF0000',
-          //      strokeOpacity: 1.0,
-          //      strokeWeight: 2
-          //    });
-
-          //    line.setMap(map);
-          // });
-
-
-          console.log("new route");
+                  console.log("new route");
 
       }
 
@@ -268,7 +237,7 @@
           //rt = JSON.parse(data.message);
           rt = data;
         //   console.log(rt);
-         
+
 
           for (var i = 0; i < rt.paths[0].points.coordinates.length; ++i) {
             ll.push({"lat":  rt.paths[0].points.coordinates[i][1], "lng": rt.paths[0].points.coordinates[i][0]})
