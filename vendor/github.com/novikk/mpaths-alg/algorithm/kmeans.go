@@ -115,7 +115,7 @@ func KmeansMaxDist(pts models.Points, maxDistMeters float64) models.Clusters {
 	k := 1
 
 	for true {
-		for i := 0; i < 10; i++ {
+		for i := 0; i < 4; i++ {
 			fmt.Println("Trying k =", k)
 			clusters := Kmeans(pts, k)
 
