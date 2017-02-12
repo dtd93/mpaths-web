@@ -1,9 +1,13 @@
 package controllers
 
 import (
-	"mpaths-web/models"
-
+	"encoding/csv"
+	"io"
+	"log"
 	"math/rand"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -15,26 +19,39 @@ type DashboardController struct {
 	beego.Controller
 }
 
-func (c *DashboardController) Get() {
-	//TODO
-	radius := 200.0
-	var data []models.Client
-	la := 41.543664
-	lo := 2.425390
-	var cli models.Client
-	for i := 0; i < 5; i++ {
-		lo = lo + 0.00300
-		cli.Lat = la
-		cli.Lng = lo
-		cli.Value = 10
-		data = append(data, cli)
-	}
+var pts malg.Points
+var latestModification time.Time
 
+func init() {
+	latestModification = time.Now()
 	rand.Seed(time.Now().UnixNano())
-	pts := algorithm.RandomPoints([2]malg.Point{
-		malg.Point{41.542137, 2.426475},
-		malg.Point{41.538419, 2.451129},
-	}, 100)
+	f, _ := os.Open("mataro.in")
+
+	r := csv.NewReader(f)
+
+	for {
+		record, err := r.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		lat, _ := strconv.ParseFloat(record[0], 64)
+		lng, _ := strconv.ParseFloat(strings.TrimSpace(record[1]), 64)
+
+		pts = append(pts, malg.Point{lat, lng})
+	}
+}
+
+func (c *DashboardController) Get() {
+	radius := 200.0
+
+	// pts := algorithm.RandomPoints([2]malg.Point{
+	// 	malg.Point{41.542137, 2.426475},
+	// 	malg.Point{41.538419, 2.451129},
+	// }, 100)
 
 	//clusters := algorithm.KmeansMaxDist(pts, radius)
 	//for _, c := range clusters {
@@ -50,4 +67,17 @@ func (c *DashboardController) Get() {
 	c.Data["clusters"] = clusters
 	c.Data["cradius"] = radius
 	c.TplName = "dashboard.tpl"
+}
+
+func (c *DashboardController) AddPoint() {
+	lat, _ := c.GetFloat("lat")
+	lng, _ := c.GetFloat("lng")
+
+	pts = append(pts, malg.Point{lat, lng})
+	latestModification = time.Now()
+}
+
+func (c *DashboardController) GetLatestModification() {
+	c.Data["json"] = latestModification
+	c.ServeJSON()
 }
