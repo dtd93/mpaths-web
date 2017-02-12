@@ -77,47 +77,56 @@
         {{ range .routes }}
             var points = {{.}};
             var route = [];
-            console.log(points);
+            //console.log(points);
             var first = true;
             var pre;
+            routes.push([]);
+            ci = routes.length-1;
+
+            points.unshift({Lat: tecnoLatt, Lng: tecnoLongg})
+            points.push({Lat: tecnoLatt, Lng: tecnoLongg})
+
             points.forEach(function (item) {
                 if (first) {
                     first = false;
                     pre = item;
                     return;
                 }
-                route = route.concat(newRoute({lat: pre.Lat, lng: pre.Lng},{lat: item.Lat, lng: item.Lng}, function(){}));
+                route = route.concat(newRoute({lat: pre.Lat, lng: pre.Lng},{lat: item.Lat, lng: item.Lng}, function(ci) {
+                    return function(pts) {
+                        routes[ci] = routes[ci].concat(pts);
+                        //routes = [route]
+                    }
+                }(ci)));
                 pre = item;
-
             })
-            routes.push(route);
         {{ end }}
         
 //hardcoded route
-        var routeHard = [{Lat: tecnoLatt, Lng: tecnoLongg}, {Lat:41.53889574433734,Lng:2.4503702798809215},{Lat:41.540763798885564,Lng:2.448372820238507},{Lat:41.54036816511354,Lng:2.4453377249312465},{Lat:41.541893500205845,Lng:2.442377004497972},{Lat:41.540683194773365,Lng:2.4417842736435946},{Lat:41.539056191826795, Lng:2.441336521697717}, {Lat: tecnoLatt, Lng: tecnoLongg}]
-        var route = [];
-        var first = true;
-        var pre;
-        routeHard.forEach(function (item) {
-            if (first) {
-                first = false;
-                pre = item;
-                return;
-            }
+        // var routeHard = [{Lat: tecnoLatt, Lng: tecnoLongg}, {Lat:41.53889574433734,Lng:2.4503702798809215},{Lat:41.540763798885564,Lng:2.448372820238507},{Lat:41.54036816511354,Lng:2.4453377249312465},{Lat:41.541893500205845,Lng:2.442377004497972},{Lat:41.540683194773365,Lng:2.4417842736435946},{Lat:41.539056191826795, Lng:2.441336521697717}, {Lat: tecnoLatt, Lng: tecnoLongg}]
+        // var route = [];
+        // var first = true;
+        // var pre;
+        // routeHard.forEach(function (item) {
+        //     if (first) {
+        //         first = false;
+        //         pre = item;
+        //         return;
+        //     }
 
-            newRoute({lat: pre.Lat, lng: pre.Lng},{lat: item.Lat, lng: item.Lng}, function(pts) {
-                route = route.concat(pts);
-                routes = [route]
-            });
+        //     newRoute({lat: pre.Lat, lng: pre.Lng},{lat: item.Lat, lng: item.Lng}, function(pts) {
+        //         route = route.concat(pts);
+        //         routes = [route]
+        //     });
             
-            pre = item;
-            console.log("inside loop route")
-        })
+        //     pre = item;
+        //     console.log("inside loop route")
+        // })
 
         
 
-        //generacio de busos segons numero de ruta
-        newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000}, function(){})
+        // //generacio de busos segons numero de ruta
+        // newRoute({lat: latt, lng: longg},{lat: latt, lng: longg+0.03000}, function(){})
 
         
 
@@ -138,7 +147,8 @@
                         fillOpacity: 1.0,
                         map: map,
                         center: {lat: routeBus[0].lat, lng: routeBus[0].lng},
-                        radius: 10
+                        radius: 10,
+                        zIndex: 99,
                     });
 
 
