@@ -24,7 +24,6 @@ var latestModification time.Time
 
 func init() {
 	latestModification = time.Now()
-	rand.Seed(time.Now().UnixNano())
 	f, _ := os.Open("mataro.in")
 
 	r := csv.NewReader(f)
@@ -46,6 +45,7 @@ func init() {
 }
 
 func (c *DashboardController) Get() {
+	rand.Seed(42)
 	radius := 300.0
 
 	// pts := algorithm.RandomPoints([2]malg.Point{
